@@ -1,14 +1,17 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import ToolContext from '../context/toolContext';
-import rough from 'roughjs';
+import ShapeContext from '../context/ShapeContext';
 
 const DrawingCanvas = () => {
   const canvas = useRef();
   const [context, setContext] = useState();
-  const { currentTool, penStart, penEnd, penDrawing } = useContext(ToolContext);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const { currentTool, tools } = useContext(ToolContext);
+  const { drawShapes } = useContext(ShapeContext);
 
   useEffect(() => {
     setContext(canvas.current.getContext("2d"));
+    if (context != undefined) drawRect(context);
   }, [])
 
   useEffect(() => {
@@ -21,36 +24,25 @@ const DrawingCanvas = () => {
   }, [currentTool])
 
   const MouseDown = (e) => {
-    switch (currentTool) {
-      case "Pen":
-        penStart(e, context);
-        break;
-      case "Eraser":
-        penStart(e, context);
-        context.lineWidth = 50;
-        break;
-    }
+    setIsDrawing(true);
+    tools[currentTool].start(e, context);
   }
   const MouseMove = (e) => {
-    switch (currentTool) {
-      case "Pen":
-        penDrawing(e, context);
-        break;
-      case "Eraser":
-        penDrawing(e, context);
-        break;
-    }
+    if (!isDrawing) return;
+    tools[currentTool].drawing(e, context);
+    drawShapes(context);
   }
   const MouseUp = (e) => {
-    switch (currentTool) {
-      case "Pen":
-        penEnd(e, context);
-        break;
-      case "Eraser":
-        penEnd(e, context);
-        break;
-    }
+    setIsDrawing(false);
+    tools[currentTool].end(e, context);
   }
+
+  window.addEventListener("resize", () => {
+    const canvas = document.getElementById("canvas");
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.heigth = window.innerHeight;
+  })
 
   return (
     <>
