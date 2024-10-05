@@ -21,6 +21,10 @@ const LineContextProvider = ({ children }) => {
 
   const addPoint = (id, x, y) => {
     const index = shapeList.findIndex((line) => line.id == id);
+    const lastPoint = shapeList[index].data.points[shapeList[index].data.points.length - 1];
+    const distance = Math.sqrt(Math.pow(x - lastPoint.x, 2) + Math.pow(y - lastPoint.y, 2));
+    if (distance < 10) return;
+    console.log(x, y, distance);
     shapeList[index].data.points.push({ x, y });
   }
 

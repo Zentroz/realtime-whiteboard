@@ -7,6 +7,8 @@ import RectContextProvider from './context/RectContextProvder';
 import LineContextProvider from './context/LineContextProvider';
 import CircleContextProvider from './context/CircleContextProvider';
 import ShapeContextProvider from './context/ShapeContextProvider';
+import MenuButton from './components/MenuButton';
+import RoomContextProvider from './context/RoomContextProvider';
 
 function App() {
   useEffect(() => {
@@ -15,18 +17,21 @@ function App() {
 
   return (
     <>
-      <ShapeContextProvider>
-        <CircleContextProvider>
-          <LineContextProvider>
-            <RectContextProvider>
-              <ToolContextProvider>
-                <ToolsBox />
-                <DrawingCanvas />
-              </ToolContextProvider>
-            </RectContextProvider>
-          </LineContextProvider>
-        </CircleContextProvider>
-      </ShapeContextProvider>
+      <RoomContextProvider>
+        <ShapeContextProvider>
+          <CircleContextProvider>
+            <LineContextProvider>
+              <RectContextProvider>
+                <ToolContextProvider>
+                  <ToolsBox />
+                  <DrawingCanvas />
+                  <MenuButton />
+                </ToolContextProvider>
+              </RectContextProvider>
+            </LineContextProvider>
+          </CircleContextProvider>
+        </ShapeContextProvider>
+      </RoomContextProvider>
     </>
   )
 };

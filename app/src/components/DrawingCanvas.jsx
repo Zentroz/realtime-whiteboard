@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import ToolContext from '../context/toolContext';
 import ShapeContext from '../context/ShapeContext';
+import { socket } from '../socket';
 
 const DrawingCanvas = () => {
   const canvas = useRef();
@@ -11,7 +12,10 @@ const DrawingCanvas = () => {
 
   useEffect(() => {
     setContext(canvas.current.getContext("2d"));
-    if (context != undefined) drawRect(context);
+    socket.connect();
+    socket.on("server-response", (res) => {
+      console.log(res);
+    })
   }, [])
 
   useEffect(() => {
@@ -42,6 +46,7 @@ const DrawingCanvas = () => {
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.heigth = window.innerHeight;
+    drawShapes(context);
   })
 
   return (

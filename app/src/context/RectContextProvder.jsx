@@ -3,7 +3,7 @@ import { useContext } from "react";
 import ShapeContext from "./ShapeContext";
 
 const RectContextProvider = ({ children }) => {
-  const { shapeList } = useContext(ShapeContext);
+  let { shapeList } = useContext(ShapeContext);
 
   const addRect = (x, y, width, height, strokeWidth, context) => {
     const id = shapeList[shapeList.length - 1]?.id + 1 || 0;
