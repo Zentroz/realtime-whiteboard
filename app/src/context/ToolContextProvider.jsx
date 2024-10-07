@@ -6,48 +6,49 @@ import CircleContext from "./CircleContext";
 import ShapeContext from "./ShapeContext";
 
 const ToolContextProvider = ({ children }) => {
-  const { shapeList } = useContext(ShapeContext);
+  const { shapeList, drawLine } = useContext(ShapeContext);
   const [currentTool, setCurrentTool] = useState("Pen");
   const { resizeRect, addRect } = useContext(RectContext);
-  const { addLine, addPoint, drawLine } = useContext(LineContext);
-  const { addCircle, changeRadius, drawCircle } = useContext(CircleContext);
-  const [rectX, setRectX] = useState(0);
-  const [rectY, setRectY] = useState(0);
-  const [circleX, setCircleX] = useState(0);
-  const [circleY, setCircleY] = useState(0);
+  const { addLine, addPoint } = useContext(LineContext);
+  const { addCircle, changeRadius } = useContext(CircleContext);
+  let rectX = 0;
+  let rectY = 0;
+  let circleX = 0;
+  let circleY = 0
 
-  const penStart = (event, context) => {
-    addLine(event.clientX, event.clientY);
+  const penStart = (x, y, context) => {
+    addLine(x, y);
   }
-  const penDrawing = (event, context) => {
-    addPoint(shapeList.length - 1, event.clientX, event.clientY);
-    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  const penDrawing = (x, y, context) => {
+    addPoint(shapeList.length - 1, x, y);
+    // context.clearRect(0, 0, window.innerWidth, window.innerHeight);
   }
-  const penEnd = (event, context) => {
+  const penEnd = (x, y, context) => {
     context.closePath();
   }
 
-  const circleStart = (event, context) => {
-    setCircleX(event.clientX);
-    setCircleY(event.clientY);
-    addCircle(event.clientX, event.clientY, 0);
+  const circleStart = (x, y, context) => {
+    circleX = x;
+    circleY = y;
+    addCircle(x, y, 0);
   }
-  const circleDrawing = (event, context) => {
+  const circleDrawing = (x, y, context) => {
+    const innerContext = document.getElementById("canvas").getContext("2d");
     const id = shapeList.length - 1;
-    changeRadius(id, Math.sqrt(Math.pow(event.clientX - circleX, 2) + Math.pow(event.clientY - circleY, 2)));
-    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    changeRadius(id, Math.sqrt(Math.pow(x - circleX, 2) + Math.pow(y - circleY, 2)));
+    innerContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
   }
-  const circleEnd = (event, context) => {
+  const circleEnd = (x, y, context) => {
     context.closePath();
   }
 
-  const rectStart = (event, context) => {
-    setRectX(event.clientX);
-    setRectY(event.clientY);
-    addRect(event.clientX, event.clientY, 0, 0, 2, context);
+  const rectStart = (x, y, context) => {
+    rectX = x;
+    rectY = y;
+    addRect(x, y, 0, 0, 2, context);
   }
-  const rectDrawing = (event, context) => {
-    resizeRect(shapeList.length - 1, event.clientX - rectX, event.clientY - rectY, context);
+  const rectDrawing = (x, y, context) => {
+    resizeRect(shapeList.length - 1, x - rectX, y - rectY, context);
   }
 
   const tools = {

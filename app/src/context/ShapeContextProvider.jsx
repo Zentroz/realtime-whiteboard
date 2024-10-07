@@ -40,6 +40,7 @@ const ShapeContextProvider = ({ children }) => {
       // if (shape.type == "line") drawLine(context, shape);
     });
   }
+
   return (
     <ShapeContext.Provider value={{ shapeList, drawShapes }}>
       {children}

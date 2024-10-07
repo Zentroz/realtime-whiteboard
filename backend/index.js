@@ -21,18 +21,18 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   socket.on("register-room", (data) => {
     const room = rooms.findIndex((rm) => rm.name == data.name);
-    if (room != -1) { socket.emit("server-response", { success: false, message: "Room already exists!" }) }
+    if (room != -1) { socket.emit("error-response", { success: false, message: "Room already exists!" }) }
     else {
-      rooms.push({ id: idGenerator(), ...data, members: [socket.id] });
-      const index = rooms.findIndex((rm) => rm.name == data.name);
-      socket.emit("room-created", { success: true, roomId: rooms[index].id, message: "Room Created!" });
+      const id = idGenerator();
+      rooms.push({ id, ...data, members: [socket.id] });
+      socket.emit("room-created", { success: true, roomId: id, message: "Room Created!" });
     }
 
   })
 
   socket.on("join-room", (data) => {
     const room = rooms.findIndex((rm) => rm.name == data.name && rm.password == data.password);
-    if (room == -1) { socket.emit("server-response", { success: false, message: "Room not found!" }) }
+    if (room == -1) { socket.emit("error-response", { success: false, message: "Room not found!" }) }
     else {
       rooms[room].members.push(socket.id);
       socket.emit("room-joined", { success: true, roomId: rooms[room].id, message: "Room Connected!" });
@@ -46,6 +46,30 @@ io.on('connection', (socket) => {
     const newMembers = rooms[roomIndex].members.filter((member) => member != socket.id);
     rooms[roomIndex].members = newMembers;
     socket.emit("room-left");
+  })
+
+  socket.on("start-shape", (data) => {
+    const room = rooms.find((rm) => rm.id == data.roomId);
+    const members = room.members;
+    members.forEach(socketId => {
+      socket.to(socketId).emit("start-shape", { x: data.x, y: data.y, tool: data.tool, lineOwner: socket.id });
+    });
+  })
+  socket.on("draw-shape", (data) => {
+    const room = rooms.find((rm) => rm.id == data.roomId);
+    const members = room.members;
+    members.forEach(socketId => {
+      if (socketId != socket.id) {
+        socket.to(socketId).emit("draw-shape", { x: data.x, y: data.y, tool: data.tool, lineOwner: socket.id });
+      }
+    });
+  })
+  socket.on("end-shape", (data) => {
+    const room = rooms.find((rm) => rm.id == data.roomId);
+    const members = room.members;
+    members.forEach(socketId => {
+      socket.to(socketId).emit("end-shape", { tool: data.tool, lineOwner: socket.id });
+    });
   })
 });
 

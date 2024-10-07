@@ -7,4 +7,15 @@ const isInsideElement = (elementClassOrId, mouseX, mouseY) => {
     mouseY < (rect.y + rect.height);
 }
 
-export { isInsideElement }
+const popNotification = (content) => {
+  const element = document.getElementById("notification-content");
+  const notElement = document.querySelector(".notification");
+  element.innerHTML = content;
+  notElement.style.right = "2px";
+
+  setTimeout(() => {
+    notElement.style.right = "-16rem";
+  }, 3000);
+}
+
+export { isInsideElement, popNotification }

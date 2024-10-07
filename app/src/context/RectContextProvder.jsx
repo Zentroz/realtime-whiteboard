@@ -24,11 +24,11 @@ const RectContextProvider = ({ children }) => {
 
   const moveRect = (id, newPosition, ctx) => {
     const rect = shapeList.find((rect) => rect.id == id);
-    ctx.clearRect(rect.data.x - (2 + rect.data.strokeWidth * 2),
-      rect.data.y - (2 + rect.data.strokeWidth * 2),
-      rect.data.width + (5 + rect.data.strokeWidth * 4),
-      rect.data.height + (5 + rect.data.strokeWidth * 4)
-    )
+    // ctx.clearRect(rect.data.x - (2 + rect.data.strokeWidth * 2),
+    //   rect.data.y - (2 + rect.data.strokeWidth * 2),
+    //   rect.data.width + (5 + rect.data.strokeWidth * 4),
+    //   rect.data.height + (5 + rect.data.strokeWidth * 4)
+    // )
     shapeList = shapeList.filter((rect) => rect.id != id);
     shapeList.push({
       id: rect.id,
@@ -44,11 +44,12 @@ const RectContextProvider = ({ children }) => {
   }
 
   const resizeRect = (id, width, height, ctx) => {
+    const innerContext = document.getElementById("canvas").getContext("2d");
     if (shapeList.length == 0) return;
     const index = shapeList.findIndex((rect) => rect.id == id);
     shapeList[index].data.width = width;
     shapeList[index].data.height = height;
-    ctx.clearRect(0,
+    innerContext.clearRect(0,
       0,
       window.innerWidth,
       window.innerHeight

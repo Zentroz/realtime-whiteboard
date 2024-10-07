@@ -6,7 +6,6 @@ const Menu = ({ isVisible, setIsVisible, setRoomVisible, setJoinRoomVisible }) =
   const [canCreateRoom, setCanCreateRoom] = useState();
   const [canJoinRoom, setCanJoinRoom] = useState();
   const { roomId } = useContext(RoomContext);
-  console.log(roomId);
 
   const leaveRoom = () => {
     console.log(roomId);
