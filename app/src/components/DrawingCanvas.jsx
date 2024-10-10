@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import ToolContext from '../context/toolContext';
+import ToolContext from '../context/ToolContext.js';
 import ShapeContext from '../context/ShapeContext';
 import { socket } from '../socket';
 import Notification from './Notification';
