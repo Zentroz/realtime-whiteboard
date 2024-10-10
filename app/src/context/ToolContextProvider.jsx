@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import RectContext from "./RectContext";
-import ToolContext from "./toolContext";
+import ToolContext from "./ToolContext";
 import LineContext from "./LineContext";
 import CircleContext from "./CircleContext";
 import ShapeContext from "./ShapeContext";
