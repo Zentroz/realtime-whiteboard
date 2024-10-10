@@ -2,14 +2,16 @@ import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { idGenerator } from './utils/utilsMethods.js';
+import { configDotenv } from 'dotenv';
 
 const rooms = [];
+configDotenv();
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true
   }
 });
@@ -73,6 +75,4 @@ io.on('connection', (socket) => {
   })
 });
 
-server.listen(3000, () => {
-  console.log('Server running at http://localhost:3000');
-});
+server.listen(3000);
