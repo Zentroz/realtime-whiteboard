@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import ToolContext from '../context/toolContext';
+import ToolContext from '../context/ToolContext';
 import Tool from './Tool';
 
 const ToolsBox = () => {
